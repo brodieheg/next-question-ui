@@ -38,6 +38,7 @@ interface newGameState {
   amount?: number;
   category?: number;
   difficulty?: "easy" | "medium" | "hard";
+  type?: "multiple" | "boolean";
 }
 
 const initialState: newGameState = {
@@ -45,6 +46,7 @@ const initialState: newGameState = {
   amount: 10,
   category: 9,
   difficulty: "easy",
+  type: "multiple",
 };
 
 const newGameSlice = createSlice({
@@ -64,9 +66,12 @@ const newGameSlice = createSlice({
     setCategories: (state, action) => {
       state.categories = action.payload;
     },
+    setType: (state, action) => {
+      state.type = action.payload;
+    },
   },
 });
 
-export const { setAmount, setCategory, setDifficulty, setCategories } =
+export const { setType, setAmount, setCategory, setDifficulty, setCategories } =
   newGameSlice.actions;
 export default newGameSlice.reducer;

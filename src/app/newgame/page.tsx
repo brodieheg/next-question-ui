@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 import {
   fetchQuestions,
+  setType,
   fetchCategories,
   setCategories,
   setAmount,
@@ -47,7 +48,9 @@ export default function Home() {
           </label>
           <input
             className="col-md-2 input px-2"
-            onChange={() => {}}
+            onChange={(e) => {
+              dispatch(setAmount(e.target.value));
+            }}
             name="questionNumber"
             type="number"
             id="questionNumber"
@@ -58,39 +61,46 @@ export default function Home() {
           <label className="col-md-2 offset-4" htmlFor="questionNumber">
             Category
           </label>
-          <select className="col-md-2 input px-2" onChange={handleChange}>
+          <select
+            className="col-md-2 input px-2"
+            onChange={(e) => {
+              dispatch(setCategory(e.target.value));
+              console.log(state);
+            }}
+          >
             <Categories />
           </select>
         </div>
         <div className="row mb-4 mt-5 ">
           <label className="col-md-2 offset-4" htmlFor="questionNumber">
-            How Many Questions?
+            Difficulty
           </label>
-          <input
+          <select
             className="col-md-2 input px-2"
-            onChange={() => {
-              console.log("hi");
+            onChange={(e) => {
+              dispatch(setDifficulty(e.target.value));
+              console.log(state);
             }}
-            name="questionNumber"
-            type="number"
-            id="questionNumber"
-            defaultValue={10}
-          ></input>
+          >
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
         </div>
         <div className="row mb-4 mt-5 ">
           <label className="col-md-2 offset-4" htmlFor="questionNumber">
-            How Many Questions?
+            Question Type
           </label>
-          <input
+          <select
             className="col-md-2 input px-2"
-            onChange={() => {
-              console.log("hi");
+            onChange={(e) => {
+              dispatch(setType(e.target.value));
+              console.log(state);
             }}
-            name="questionNumber"
-            type="number"
-            id="questionNumber"
-            defaultValue={10}
-          ></input>
+          >
+            <option value="multiple">Multiple Choice</option>
+            <option value="boolean">True / False</option>
+          </select>
         </div>
       </form>
       <Image

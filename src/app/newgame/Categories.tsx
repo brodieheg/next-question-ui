@@ -11,12 +11,11 @@ export default function Categories() {
   const categories: category[] = useSelector(
     (state) => state.newGame.categories
   );
-  console.log(categories);
   return (
     <>
-      {categories.map((category) => {
+      {categories.map((category, index) => {
         return (
-          <option key={category.id} value={category.id}>
+          <option key={index} value={category.id}>
             {category.name}
           </option>
         );
