@@ -19,13 +19,29 @@ export const fetchQuestions = createAsyncThunk(
   }
 );
 
+export const fetchCategories = createAsyncThunk(
+  "/questions",
+  async (_, { getState }) => {
+    try {
+      const queryUrl = `https://opentdb.com/api_category.php`;
+      const response = await axios.get(queryUrl);
+
+      return response.data;
+    } catch (err) {
+      return err;
+    }
+  }
+);
+
 interface newGameState {
+  categories: object[];
   amount?: number;
   category?: number;
   difficulty?: "easy" | "medium" | "hard";
 }
 
 const initialState: newGameState = {
+  categories: [{ hello: "world" }],
   amount: 10,
   category: 9,
   difficulty: "easy",
@@ -39,13 +55,18 @@ const newGameSlice = createSlice({
       state.amount = action.payload;
     },
     setCategory: (state, action) => {
+      console.log("set");
       state.category = action.payload;
     },
     setDifficulty: (state, action) => {
       state.difficulty = action.payload;
     },
+    setCategories: (state, action) => {
+      state.categories = action.payload;
+    },
   },
 });
 
-export const { setAmount, setCategory, setDifficulty } = newGameSlice.actions;
+export const { setAmount, setCategory, setDifficulty, setCategories } =
+  newGameSlice.actions;
 export default newGameSlice.reducer;

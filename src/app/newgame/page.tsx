@@ -1,11 +1,15 @@
 "use client";
 import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import Categories from "./Categories";
 import Image from "next/image";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import { useRouter } from "next/navigation";
 
 import {
   fetchQuestions,
+  fetchCategories,
+  setCategories,
   setAmount,
   setCategory,
   setDifficulty,
@@ -15,12 +19,18 @@ export default function Home() {
   const router = useRouter();
   const state: RootState = useSelector((state) => state.newGame);
   const dispatch: AppDispatch = useDispatch();
-  const handleChange = (action: any, payload: any) => {
-    dispatch(action(payload));
+  useEffect(() => {
+    const resultsCall = async () => {
+      const results = await dispatch(fetchCategories());
+      dispatch(setCategories(results.payload.trivia_categories));
+    };
+    resultsCall();
+  }, []);
+  const handleChange = (e) => {
+    console.log(e.target.value);
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(state);
   };
   return (
     <>
@@ -37,9 +47,7 @@ export default function Home() {
           </label>
           <input
             className="col-md-2 input px-2"
-            onChange={() => {
-              console.log("hi");
-            }}
+            onChange={() => {}}
             name="questionNumber"
             type="number"
             id="questionNumber"
@@ -50,14 +58,8 @@ export default function Home() {
           <label className="col-md-2 offset-4" htmlFor="questionNumber">
             Category
           </label>
-          <select
-            className="col-md-2 input px-2"
-            // onChange={(e) => {
-            //   console.log(e.target.value);
-            // }}
-          >
-            <option value={"option 1"}>Option 1</option>
-            <option value={"option 2"}>Option 2</option>
+          <select className="col-md-2 input px-2" onChange={handleChange}>
+            <Categories />
           </select>
         </div>
         <div className="row mb-4 mt-5 ">
