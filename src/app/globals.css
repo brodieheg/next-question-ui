@@ -94,6 +94,13 @@ main {
   background-color: #2e5a88;
 }
 
+button {
+  background-color: white !important;
+  color: black !important;
+  border: white;
+  font-weight: 500 !important;
+}
+
 .blue {
   background-color: #2e5a88;
 }

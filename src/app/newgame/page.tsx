@@ -5,6 +5,7 @@ import Categories from "./Categories";
 import Image from "next/image";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import { useRouter } from "next/navigation";
+import { AppDispatch, RootState } from "../store/configureStore";
 
 import {
   fetchQuestions,
@@ -15,23 +16,34 @@ import {
   setCategory,
   setDifficulty,
 } from "../store/slices/slices/newGameSlice";
-import { AppDispatch, RootState } from "../store/configureStore";
+import { setQuestions } from "../store/slices/slices/playGameSlice";
+
 export default function Home() {
   const router = useRouter();
   const state: RootState = useSelector((state) => state.newGame);
+  const playGameState: RootState = useSelector((state) => state.playGame);
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     const resultsCall = async () => {
+      console.log("call");
       const results = await dispatch(fetchCategories());
       dispatch(setCategories(results.payload.trivia_categories));
     };
     resultsCall();
   }, []);
-  const handleChange = (e) => {
-    console.log(e.target.value);
-  };
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log(state);
+    const questions = await dispatch(fetchQuestions());
+    console.log(questions);
+    if (!questions.payload.response_code) {
+      dispatch(setQuestions(questions.payload.results));
+    } else {
+      console.log("no results");
+    }
+    console.log(playGameState.questions[0].question);
+    router.push("/playgame");
   };
   return (
     <>
@@ -65,7 +77,6 @@ export default function Home() {
             className="col-md-2 input px-2"
             onChange={(e) => {
               dispatch(setCategory(e.target.value));
-              console.log(state);
             }}
           >
             <Categories />
@@ -79,7 +90,6 @@ export default function Home() {
             className="col-md-2 input px-2"
             onChange={(e) => {
               dispatch(setDifficulty(e.target.value));
-              console.log(state);
             }}
           >
             <option value="easy">Easy</option>
@@ -95,21 +105,35 @@ export default function Home() {
             className="col-md-2 input px-2"
             onChange={(e) => {
               dispatch(setType(e.target.value));
-              console.log(state);
             }}
           >
             <option value="multiple">Multiple Choice</option>
             <option value="boolean">True / False</option>
           </select>
         </div>
+        <div className="row mb-4 mt-5 ">
+          <button
+            type="submit"
+            className="border-0 col-md-4 offset-4 btn btn-primary mt-4"
+          >
+            Submit
+          </button>
+        </div>
+        <div className="row mb-4 mt-5 ">
+          <button
+            onClick={() => router.push("/")}
+            className="border-0 col-md-4 offset-4 btn btn-primary"
+          >
+            Back to Home
+          </button>
+        </div>
       </form>
       <Image
         src="/logo.png"
-        width={220}
-        height={220}
-        className="img-fluid rounded pt-5 mx-auto d-block"
+        width={150}
+        height={150}
+        className="img-fluid rounded pt-2 mx-auto d-block"
         alt="Next Question logo"
-        role="button"
         onClick={() => router.push("/")}
       />
     </>
