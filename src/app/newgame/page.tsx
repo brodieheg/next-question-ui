@@ -1,11 +1,12 @@
 "use client";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Categories from "./Categories";
 import Image from "next/image";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "../store/configureStore";
+import NoResultsError from "../components/NoResultsError";
 
 import {
   fetchQuestions,
@@ -19,6 +20,7 @@ import {
 import { setQuestions } from "../store/slices/slices/playGameSlice";
 
 export default function Home() {
+  const [responseCode, setResponseCode] = useState(0);
   const router = useRouter();
   const state: RootState = useSelector((state) => state.newGame);
   const playGameState: RootState = useSelector((state) => state.playGame);
@@ -34,17 +36,18 @@ export default function Home() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(state);
     const questions = await dispatch(fetchQuestions());
     console.log(questions);
+    setResponseCode(questions.payload.response_code);
     if (!questions.payload.response_code) {
       dispatch(setQuestions(questions.payload.results));
+      router.push("/playgame");
     } else {
       console.log("no results");
+      return false;
     }
-    console.log(playGameState.questions[0].question);
-    router.push("/playgame");
   };
+
   return (
     <>
       <h1 className="col-md-4 pt-2 pb-2 offset-4 text-white text-center mt-5">
@@ -65,6 +68,7 @@ export default function Home() {
             }}
             name="questionNumber"
             type="number"
+            max="50"
             id="questionNumber"
             defaultValue={10}
           ></input>
@@ -112,6 +116,7 @@ export default function Home() {
           </select>
         </div>
         <div className="row mb-4 mt-5 ">
+          <NoResultsError responseCode={responseCode} />
           <button
             type="submit"
             className="border-0 col-md-4 offset-4 btn btn-primary mt-4"

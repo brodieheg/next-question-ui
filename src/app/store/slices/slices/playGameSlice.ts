@@ -14,6 +14,9 @@ interface questionState {
 
 interface playGameState {
   questions: questionState[];
+  activeQuestion: any;
+  score: number;
+  activeQuestionIndex: number;
 }
 
 const initialState: playGameState = {
@@ -27,6 +30,8 @@ const initialState: playGameState = {
       incorrect_answers: [""],
     },
   ],
+  activeQuestion: 0,
+  score: 0,
 };
 
 const playGameSlice = createSlice({
@@ -36,8 +41,22 @@ const playGameSlice = createSlice({
     setQuestions: (state, action) => {
       state.questions = action.payload;
     },
+    setActiveQuestion: (state, action) => {
+      state.activeQuestion = action.payload;
+    },
+    setScore: (state, action) => {
+      state.score = action.payload;
+    },
+    setActiveQuestionIndex: (state, action) => {
+      state.activeQuestionIndex = action.payload;
+    },
   },
 });
 
-export const { setQuestions } = playGameSlice.actions;
+export const {
+  setQuestions,
+  setActiveQuestion,
+  setScore,
+  setActiveQuestionIndex,
+} = playGameSlice.actions;
 export default playGameSlice.reducer;
