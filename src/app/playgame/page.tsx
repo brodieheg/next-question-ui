@@ -5,6 +5,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "../store/configureStore";
 import FinalScore from "../components/FinalScore";
+import Image from "next/image";
 import {
   setActiveQuestion,
   setScore,
@@ -23,113 +24,91 @@ export default function Home() {
     dispatch(setScore(0));
     dispatch(setActiveQuestion(1));
   }, [dispatch]);
-  const shuffleChoices = (
-    correctAnswer: string,
-    incorrectAnswers: string[]
-  ) => {
-    const correctAnswerMarked = {
-      answer: correctAnswer,
-      correct: true,
-      id: uuidv4(),
-    };
-    const incorrectAnswersMarked = incorrectAnswers.map((answer) => {
-      return { answer, correct: false, id: uuidv4() };
-    });
-    const combinedArray: object[] = incorrectAnswersMarked.toSpliced(
-      0,
-      0,
-      correctAnswerMarked
-    );
-    let currentIndex = combinedArray.length,
-      randomIndex;
-
-    while (currentIndex > 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      [combinedArray[currentIndex], combinedArray[randomIndex]] = [
-        combinedArray[randomIndex],
-        combinedArray[currentIndex],
-      ];
-    }
-    return combinedArray;
-  };
-
-  const answerChoices = questions.map((question) => {
-    const answers = shuffleChoices(
-      question.correct_answer,
-      question.incorrect_answers
-    );
-    return {
-      question: question.question,
-      answers,
-    };
-  });
 
   const incrementActiveQuestion = () => {
     dispatch(setActiveQuestion(activeQuestion + 1));
   };
   // Fix answer choices find to locate the answer and return it
   const handleClick = (e) => {
-    console.log(activeQuestion);
     setTimeout(incrementActiveQuestion, 1000);
     const id = e.target.id;
 
-    for (let i = 0; i < answerChoices.length; i++) {
-      const question = answerChoices[i];
+    for (let i = 0; i < questions.length; i++) {
+      const question = questions[i];
       let foundAnswer = question.answers.find((answer) => answer.id == id);
       if (foundAnswer) {
         const answer = foundAnswer;
+        if (answer.correct) {
+          setRight(true);
+          setWrong(true);
 
-        setRight(true);
-        console.log("correct");
-        setTimeout(() => {
-          setRight(false);
-          dispatch(setScore(state.score + 1));
-        }, 1000);
-
-        setWrong(true);
-        setTimeout(() => {
-          setWrong(false);
-        }, 1000);
+          setTimeout(() => {
+            setRight(false);
+            setWrong(false);
+            dispatch(setScore(state.score + 1));
+          }, 1000);
+        } else {
+          setWrong(true);
+          setRight(true);
+          setTimeout(() => {
+            setWrong(false);
+            setRight(false);
+          }, 1000);
+        }
       }
     }
   };
 
   return (
-    <>
-      {answerChoices.map((question, index) => {
+    <div className="row text-center">
+      {questions.map((question, index) => {
         if (index === activeQuestion - 1) {
           return (
-            <div key={uuidv4()}>
-              <h4 className="mt-5 text-white text-center">
+            <div
+              className="container w-75 justify-content-center"
+              key={uuidv4()}
+            >
+              <h5 className="mt-5 text-white col-md-4 offset-4 text-center">
                 Question no: {activeQuestion}
+              </h5>
+              <h4
+                className="mt-3 text-white col-md-4 offset-4 text-center"
+                key={uuidv4()}
+              >
+                {he.decode(question.question)}
               </h4>
-              <div key={uuidv4()}>{he.decode(question.question)}</div>
               {question.answers.map((answer) => {
                 if (!answer.correct) {
                   return (
-                    <div
-                      className={wrong ? "bg-danger" : ""}
+                    <button
+                      className={
+                        wrong
+                          ? "mt-4 mx-2 bg-danger border-0 col-md-4 offset-4 btn btn-primary"
+                          : "mt-4 mx-2 border-0 offset-4 col-md-4 text-center btn btn-primary"
+                      }
                       onClick={handleClick}
                       id={answer.id}
                       key={uuidv4()}
                     >
                       {" "}
                       {he.decode(answer.answer)}{" "}
-                    </div>
+                    </button>
                   );
                 } else
                   return (
-                    <div
-                      className={right ? "bg-success" : ""}
+                    <button
+                      className={
+                        right
+                          ? "mt-4 mx-2 border-0 col-md-4 offset-4 btn btn-primary bg-success"
+                          : "mt-4 mx-2 border-0 col-md-4 offset-4 btn btn-primary"
+                      }
                       onClick={handleClick}
                       id={answer.id}
                       key={uuidv4()}
                     >
                       {" "}
                       {he.decode(answer.answer)}{" "}
-                    </div>
+                    </button>
                   );
               })}
             </div>
@@ -137,6 +116,6 @@ export default function Home() {
         }
       })}
       <FinalScore />
-    </>
+    </div>
   );
 }

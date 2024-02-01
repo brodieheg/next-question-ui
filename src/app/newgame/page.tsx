@@ -1,12 +1,13 @@
 "use client";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 import Categories from "./Categories";
 import Image from "next/image";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "../store/configureStore";
 import NoResultsError from "../components/NoResultsError";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   fetchQuestions,
@@ -17,17 +18,16 @@ import {
   setCategory,
   setDifficulty,
 } from "../store/slices/slices/newGameSlice";
-import { setQuestions } from "../store/slices/slices/playGameSlice";
+import {
+  setQuestions,
+  setResponseCode,
+} from "../store/slices/slices/playGameSlice";
 
 export default function Home() {
-  const [responseCode, setResponseCode] = useState(0);
   const router = useRouter();
-  const state: RootState = useSelector((state) => state.newGame);
-  const playGameState: RootState = useSelector((state) => state.playGame);
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     const resultsCall = async () => {
-      console.log("call");
       const results = await dispatch(fetchCategories());
       dispatch(setCategories(results.payload.trivia_categories));
     };
@@ -37,13 +37,11 @@ export default function Home() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const questions = await dispatch(fetchQuestions());
-    console.log(questions);
-    setResponseCode(questions.payload.response_code);
+    dispatch(setResponseCode(questions.payload.response_code));
     if (!questions.payload.response_code) {
       dispatch(setQuestions(questions.payload.results));
       router.push("/playgame");
     } else {
-      console.log("no results");
       return false;
     }
   };
@@ -80,7 +78,11 @@ export default function Home() {
           <select
             className="col-md-2 input px-2"
             onChange={(e) => {
-              dispatch(setCategory(e.target.value));
+              if (e.target.value === "any") {
+                dispatch(setCategory(null));
+              } else {
+                dispatch(setCategory(e.target.value));
+              }
             }}
           >
             <Categories />
@@ -93,9 +95,16 @@ export default function Home() {
           <select
             className="col-md-2 input px-2"
             onChange={(e) => {
-              dispatch(setDifficulty(e.target.value));
+              if (e.target.value === "any") {
+                dispatch(setDifficulty(null));
+              } else {
+                dispatch(setDifficulty(e.target.value));
+              }
             }}
           >
+            <option key={uuidv4()} value="any">
+              Mixed Difficulty
+            </option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
@@ -108,15 +117,20 @@ export default function Home() {
           <select
             className="col-md-2 input px-2"
             onChange={(e) => {
-              dispatch(setType(e.target.value));
+              if (e.target.value === "any") {
+                dispatch(setType(null));
+              } else {
+                dispatch(setType(e.target.value));
+              }
             }}
           >
+            <option value="any">Any Type</option>
             <option value="multiple">Multiple Choice</option>
             <option value="boolean">True / False</option>
           </select>
         </div>
         <div className="row mb-4 mt-5 ">
-          <NoResultsError responseCode={responseCode} />
+          <NoResultsError />
           <button
             type="submit"
             className="border-0 col-md-4 offset-4 btn btn-primary mt-4"
@@ -139,7 +153,6 @@ export default function Home() {
         height={150}
         className="img-fluid rounded pt-2 mx-auto d-block"
         alt="Next Question logo"
-        onClick={() => router.push("/")}
       />
     </>
   );

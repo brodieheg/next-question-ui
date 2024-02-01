@@ -1,8 +1,51 @@
 // fix for open trivia api
-
+import { v4 as uuidv4 } from "uuid";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../../rootReducer";
 import axios from "axios";
+
+const shuffleChoices = (correctAnswer: string, incorrectAnswers: string[]) => {
+  const correctAnswerMarked = {
+    answer: correctAnswer,
+    correct: true,
+    id: uuidv4(),
+  };
+  const incorrectAnswersMarked = incorrectAnswers.map((answer) => {
+    return { answer, correct: false, id: uuidv4() };
+  });
+  const combinedArray: object[] = incorrectAnswersMarked.toSpliced(
+    0,
+    0,
+    correctAnswerMarked
+  );
+  let currentIndex = combinedArray.length,
+    randomIndex;
+
+  while (currentIndex > 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [combinedArray[currentIndex], combinedArray[randomIndex]] = [
+      combinedArray[randomIndex],
+      combinedArray[currentIndex],
+    ];
+  }
+  return combinedArray;
+};
+
+const answerChoices = (questions: []) => {
+  const newQuestions = questions.map((question) => {
+    const answers = shuffleChoices(
+      question.correct_answer,
+      question.incorrect_answers
+    );
+    return {
+      question: question.question,
+      answers,
+    };
+  });
+  return newQuestions;
+};
 
 // Async thunks
 export const fetchQuestions = createAsyncThunk(
@@ -18,7 +61,11 @@ export const fetchQuestions = createAsyncThunk(
         type: state.newGame.type,
       };
       const response = await axios.get(queryUrl, { params });
-      return response.data;
+      const newResponse = {
+        response_code: response.data.response_code,
+        results: answerChoices(response.data.results),
+      };
+      return newResponse;
     } catch (err) {
       return err;
     }
@@ -41,18 +88,18 @@ export const fetchCategories = createAsyncThunk(
 
 interface newGameState {
   categories: object[];
-  amount?: number;
-  category?: number;
-  difficulty?: "easy" | "medium" | "hard";
-  type?: "multiple" | "boolean";
+  amount?: number | null;
+  category?: number | null;
+  difficulty?: "easy" | "medium" | "hard" | null;
+  type?: "multiple" | "boolean" | null;
 }
 
 const initialState: newGameState = {
   categories: [{ hello: "world" }],
   amount: 10,
-  category: 9,
-  difficulty: "easy",
-  type: "multiple",
+  category: null,
+  difficulty: null,
+  type: null,
 };
 
 const newGameSlice = createSlice({

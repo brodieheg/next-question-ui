@@ -4,34 +4,27 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../../rootReducer";
 
 interface questionState {
-  type: "boolean" | "multiple";
-  difficulty: "easy" | "medium" | "hard";
-  category: string;
   question: string;
-  correct_answer: string;
-  incorrect_answers: string[];
+  answers: [];
 }
 
 interface playGameState {
   questions: questionState[];
-  activeQuestion: any;
+  activeQuestion: number;
   score: number;
-  activeQuestionIndex: number;
+  responseCode: number;
 }
 
 const initialState: playGameState = {
   questions: [
     {
-      type: "boolean",
-      difficulty: "easy",
-      category: "General Knowledge",
       question: "",
-      correct_answer: "",
-      incorrect_answers: [""],
+      answers: [],
     },
   ],
   activeQuestion: 0,
   score: 0,
+  responseCode: 0,
 };
 
 const playGameSlice = createSlice({
@@ -47,16 +40,12 @@ const playGameSlice = createSlice({
     setScore: (state, action) => {
       state.score = action.payload;
     },
-    setActiveQuestionIndex: (state, action) => {
-      state.activeQuestionIndex = action.payload;
+    setResponseCode: (state, action) => {
+      state.responseCode = action.payload;
     },
   },
 });
 
-export const {
-  setQuestions,
-  setActiveQuestion,
-  setScore,
-  setActiveQuestionIndex,
-} = playGameSlice.actions;
+export const { setQuestions, setActiveQuestion, setResponseCode, setScore } =
+  playGameSlice.actions;
 export default playGameSlice.reducer;
