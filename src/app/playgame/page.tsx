@@ -5,7 +5,6 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "../store/configureStore";
 import FinalScore from "../components/FinalScore";
-import Image from "next/image";
 import {
   setActiveQuestion,
   setScore,
