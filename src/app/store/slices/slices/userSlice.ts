@@ -5,7 +5,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const newGame = createAsyncThunk(
   "newgame",
-  async (gameBody, { rejectWithValue }) => {
+  async (gameBody: {}, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${BASE_URL}/newgame`, gameBody);
       return response.data;
