@@ -18,7 +18,7 @@ export const Nav = () => {
 
   const email = useSelector((state: RootState) => state.user.email);
   const games = useSelector((state: RootState) => state.user.games);
-  const uniqueGames = games.filter((game) => {
+  const uniqueGames = games.filter((game: any) => {
     if (game.dateCreated !== null) {
       return true;
     }
@@ -46,9 +46,7 @@ export const Nav = () => {
           </Link>
           <li>{email}</li>
           <li>
-            <LinkButton href="#" onClick={handleSignOutClick}>
-              Sign Out
-            </LinkButton>
+            <LinkButton onClick={handleSignOutClick}>Sign Out</LinkButton>
           </li>
         </>
       );
