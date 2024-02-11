@@ -24,7 +24,18 @@ const FinalScore = () => {
   );
   const user = useSelector((state: RootState) => state.user.id);
 
-  const gameToSave = {
+  type game = {
+    _id?: number;
+    user: number;
+    dateCreated: string | null | undefined;
+    questions: any[];
+    difficulty: "easy" | "medium" | "hard" | undefined | null;
+    category: number | null | undefined;
+    type: string | null | undefined;
+    score: number;
+  };
+
+  const gameToSave: game = {
     user,
     dateCreated,
     questions,

@@ -1,4 +1,4 @@
-const RejectedSignIn = (props) => {
+const RejectedSignIn = (props: any) => {
   if (props.rejected) {
     return (
       <>

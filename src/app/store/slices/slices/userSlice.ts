@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -41,7 +41,19 @@ const userSlice = createSlice({
     storeEmail: (state, action) => {
       state.email = action.payload;
     },
-    addGame: (state, action) => {
+    addGame: (
+      state: any,
+      action: PayloadAction<{
+        _id?: number;
+        user: number;
+        dateCreated: string | null | undefined;
+        questions: any[];
+        difficulty: "easy" | "medium" | "hard" | undefined | null;
+        category: number | null | undefined;
+        type: string | null | undefined;
+        score: number;
+      }>
+    ) => {
       if (
         !state.games.find(
           (game: { _id: number }) => game._id === action.payload._id
