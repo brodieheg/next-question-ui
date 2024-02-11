@@ -73,14 +73,14 @@ const authSlice = createSlice({
         state.authenticated = action.payload.token;
         state.email = action.payload.email || null;
       })
-      .addCase(signup.rejected, (state, action) => {
+      .addCase(signup.rejected, (state: any, action) => {
         state.errorMessage = action.payload;
       })
       .addCase(signin.fulfilled, (state, action) => {
         state.authenticated = action.payload.token;
         state.email = action.payload.email || null;
       })
-      .addCase(signin.rejected, (state, action) => {
+      .addCase(signin.rejected, (state: any, action) => {
         state.errorMessage = action.payload;
       });
     // .addCase(fetchUser.fulfilled, (state, action) => {

@@ -13,13 +13,13 @@ import { setAuthenticated } from "../store/slices/slices/authSlice";
 const useLoadUser = () => {
   const dispatch: AppDispatch = useDispatch();
   async function getUser() {
-    const response = await dispatch(fetchUser());
+    const response: any = await dispatch(fetchUser());
     dispatch(setAuthenticated(response.payload.token));
     dispatch(storeEmail(response.payload.response.email));
     dispatch(storeId(response.payload.response._id));
     dispatch(setAllTimeScore(response.payload.response.allTimeScore));
     if (Array.isArray(response.payload.response.games)) {
-      response.payload.response.games.forEach((game: {}) => {
+      response.payload.response.games.forEach((game: any) => {
         dispatch(addGame(game));
       });
     }

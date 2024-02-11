@@ -28,15 +28,15 @@ export default function Home() {
     dispatch(setActiveQuestion(activeQuestion + 1));
   };
   // Fix answer choices find to locate the answer and return it
-  const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleClick = (e: any) => {
     setTimeout(incrementActiveQuestion, 1000);
     const id = e.target.id;
 
     for (let i = 0; i < questions.length; i++) {
       const question = questions[i];
-      let foundAnswer = question.answers.find((answer) => answer.id == id);
+      let foundAnswer = question.answers.find((answer: any) => answer.id == id);
       if (foundAnswer) {
-        const answer = foundAnswer;
+        const answer: any = foundAnswer;
         if (answer.correct) {
           setRight(true);
           setWrong(true);
@@ -76,7 +76,7 @@ export default function Home() {
               >
                 {he.decode(question.question)}
               </h4>
-              {question.answers.map((answer) => {
+              {question.answers.map((answer: any) => {
                 if (!answer.correct) {
                   return (
                     <button

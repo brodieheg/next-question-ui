@@ -29,7 +29,7 @@ export default function Home() {
             Your original score will not be affected, but your results will
             contribute to your all-time score percentage
           </p>
-          {games.map((game) => {
+          {games.map((game: any) => {
             if (game.dateCreated) {
               return (
                 <button
