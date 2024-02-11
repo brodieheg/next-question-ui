@@ -1,6 +1,9 @@
 import { useSelector } from "react-redux";
+import { RootState } from "../store/configureStore";
 const NoResultsError = () => {
-  const responseCode = useSelector((state) => state.playGame.responseCode);
+  const responseCode = useSelector(
+    (state: RootState) => state.playGame.responseCode
+  );
   if (responseCode !== 0) {
     return (
       <>
