@@ -35,23 +35,34 @@ const FinalScore = () => {
     score: number;
   };
 
-  const gameToSave: game = {
-    user,
-    dateCreated,
-    questions,
-    difficulty,
-    category,
-    type,
-    score,
-  };
   useEffect(() => {
+    const gameToSave: game = {
+      user,
+      dateCreated,
+      questions,
+      difficulty,
+      category,
+      type,
+      score,
+    };
     if (!responseCode && questions.length === activeQuestion - 1) {
       // save game to database
       dispatch(newGame(gameToSave));
       // save game to redux until next database call
-      dispatch(addGame(gameToSave));
     }
-  });
+  }, [
+    dispatch,
+    category,
+    dateCreated,
+    difficulty,
+    questions,
+    score,
+    type,
+    user,
+    activeQuestion,
+    questions.length,
+    responseCode,
+  ]);
   if (!responseCode && questions.length === activeQuestion - 1) {
     return (
       <div className="final-score">
