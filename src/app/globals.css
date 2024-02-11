@@ -86,14 +86,20 @@ body {
   background-color: #2e5a88 !important;
 }
 
+.game-button:hover {
+  opacity: 0.5;
+  content: "Play Again!";
+}
+
+.content-under-nav {
+  margin-top: 100px;
+  margin-bottom: 20px;
+}
+
 .final-score {
   margin-top: 200px !important;
   margin-bottom: auto !important;
 }
-/* 
-input {
-  margin-left: 12px !important;
-} */
 
 main {
   background-color: #2e5a88;

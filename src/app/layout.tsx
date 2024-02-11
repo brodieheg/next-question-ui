@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Head from "next/head";
 import store from "./store/configureStore";
 import { Provider } from "react-redux";
+import { Nav } from "./components/Nav";
 
 import "./globals.css";
 
@@ -14,14 +15,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Provider store={store}>
-      <html lang="en">
-        <head>
-          <title>Next Question</title>
-          <meta property="og:title" content="My page title" key="title" />
-        </head>
-        <body className={inter.className}>{children}</body>
-      </html>
-    </Provider>
+    <html lang="en">
+      <head>
+        <title>Next Question</title>
+        <meta property="og:title" content="My page title" key="title" />
+      </head>
+      <body className={inter.className}>
+        <Provider store={store}>
+          <Nav />
+          <div className="content-under-nav">{children}</div>
+        </Provider>
+      </body>
+    </html>
   );
 }

@@ -33,7 +33,13 @@ const shuffleChoices = (correctAnswer: string, incorrectAnswers: string[]) => {
   return combinedArray;
 };
 
-const answerChoices = (questions: []) => {
+interface Question {
+  question: string;
+  correct_answer: string;
+  incorrect_answers: [];
+}
+
+const answerChoices = (questions: Question[]) => {
   const newQuestions = questions.map((question) => {
     const answers = shuffleChoices(
       question.correct_answer,
@@ -53,7 +59,7 @@ export const fetchQuestions = createAsyncThunk(
   async (_, { getState }) => {
     try {
       const queryUrl = `https://opentdb.com/api.php?`;
-      const state = getState();
+      const state: RootState = getState();
       const params = {
         amount: state.newGame.amount,
         category: state.newGame.category,
@@ -92,6 +98,7 @@ interface newGameState {
   category?: number | null;
   difficulty?: "easy" | "medium" | "hard" | null;
   type?: "multiple" | "boolean" | null;
+  dateCreated?: string | null;
 }
 
 const initialState: newGameState = {
@@ -100,6 +107,7 @@ const initialState: newGameState = {
   category: null,
   difficulty: null,
   type: null,
+  dateCreated: null,
 };
 
 const newGameSlice = createSlice({
@@ -121,9 +129,18 @@ const newGameSlice = createSlice({
     setType: (state, action) => {
       state.type = action.payload;
     },
+    setDate: (state, action) => {
+      state.dateCreated = action.payload;
+    },
   },
 });
 
-export const { setType, setAmount, setCategory, setDifficulty, setCategories } =
-  newGameSlice.actions;
+export const {
+  setType,
+  setAmount,
+  setCategory,
+  setDifficulty,
+  setDate,
+  setCategories,
+} = newGameSlice.actions;
 export default newGameSlice.reducer;

@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
 import * as he from "he";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch } from "../store/configureStore";
+import { AppDispatch, RootState } from "../store/configureStore";
 import FinalScore from "../components/FinalScore";
 import {
   setActiveQuestion,
@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
   const dispatch: AppDispatch = useDispatch();
-  const state = useSelector((state) => state.playGame);
+  const state = useSelector((state: RootState) => state.playGame);
   const questions = state.questions;
   const activeQuestion = state.activeQuestion;
   const [wrong, setWrong] = React.useState(false);
@@ -28,7 +28,7 @@ export default function Home() {
     dispatch(setActiveQuestion(activeQuestion + 1));
   };
   // Fix answer choices find to locate the answer and return it
-  const handleClick = (e) => {
+  const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
     setTimeout(incrementActiveQuestion, 1000);
     const id = e.target.id;
 

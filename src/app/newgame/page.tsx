@@ -1,5 +1,5 @@
 "use client";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import Categories from "./Categories";
 import Image from "next/image";
@@ -8,9 +8,11 @@ import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "../store/configureStore";
 import NoResultsError from "../components/NoResultsError";
 import { v4 as uuidv4 } from "uuid";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 import {
   fetchQuestions,
+  setDate,
   setType,
   fetchCategories,
   setCategories,
@@ -24,9 +26,11 @@ import {
 } from "../store/slices/slices/playGameSlice";
 
 export default function Home() {
+  const state = useSelector((state: RootState) => state.user.games);
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
+    console.log(state);
     const resultsCall = async () => {
       const results = await dispatch(fetchCategories());
       dispatch(setCategories(results.payload.trivia_categories));
@@ -36,10 +40,21 @@ export default function Home() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const questions = await dispatch(fetchQuestions());
+    const questions = (await dispatch(fetchQuestions())) as PayloadAction<
+      { response_code: number; results: any[] },
+      string,
+      any
+    >;
     dispatch(setResponseCode(questions.payload.response_code));
     if (!questions.payload.response_code) {
       dispatch(setQuestions(questions.payload.results));
+      const date = new Date().toLocaleDateString("en-us", {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+      dispatch(setDate(date));
       router.push("/playgame");
     } else {
       return false;
@@ -138,20 +153,13 @@ export default function Home() {
             Submit
           </button>
         </div>
-        <div className="row mb-4 mt-5 ">
-          <button
-            onClick={() => router.push("/")}
-            className="border-0 col-md-4 offset-4 btn btn-primary"
-          >
-            Back to Home
-          </button>
-        </div>
+        <div className="row mb-1 mt-5"></div>
       </form>
       <Image
         src="/logo.png"
         width={150}
         height={150}
-        className="img-fluid rounded pt-2 mx-auto d-block"
+        className="img-fluid rounded mx-auto d-block"
         alt="Next Question logo"
       />
     </>

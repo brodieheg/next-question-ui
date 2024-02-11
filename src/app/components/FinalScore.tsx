@@ -1,11 +1,46 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../store/configureStore";
 import { useRouter } from "next/navigation";
+import { newGame, addGame } from "../store/slices/slices/userSlice";
+import { useEffect } from "react";
 const FinalScore = () => {
+  const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-  const score = useSelector((state) => state.playGame.score);
-  const responseCode = useSelector((state) => state.playGame.responseCode);
-  const activeQuestion = useSelector((state) => state.playGame.activeQuestion);
-  const questions = useSelector((state) => state.playGame.questions);
+  const score = useSelector((state: RootState) => state.playGame.score);
+  const responseCode = useSelector(
+    (state: RootState) => state.playGame.responseCode
+  );
+  const activeQuestion = useSelector(
+    (state: RootState) => state.playGame.activeQuestion
+  );
+  const questions = useSelector((state: RootState) => state.playGame.questions);
+  const difficulty = useSelector(
+    (state: RootState) => state.newGame.difficulty
+  );
+  const category = useSelector((state: RootState) => state.newGame.category);
+  const type = useSelector((state: RootState) => state.newGame.type);
+  const dateCreated = useSelector(
+    (state: RootState) => state.newGame.dateCreated
+  );
+  const user = useSelector((state: RootState) => state.user.id);
+
+  const gameToSave = {
+    user,
+    dateCreated,
+    questions,
+    difficulty,
+    category,
+    type,
+    score,
+  };
+  useEffect(() => {
+    if (!responseCode && questions.length === activeQuestion - 1) {
+      // save game to database
+      dispatch(newGame(gameToSave));
+      // save game to redux until next database call
+      dispatch(addGame(gameToSave));
+    }
+  });
   if (!responseCode && questions.length === activeQuestion - 1) {
     return (
       <div className="final-score">
