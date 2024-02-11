@@ -18,7 +18,7 @@ export default function HomeNav() {
 
   useEffect(() => {
     loadUser();
-  }, []);
+  }, [loadUser]);
 
   const router = useRouter();
   if (authenticated) {

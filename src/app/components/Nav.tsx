@@ -25,12 +25,11 @@ export const Nav = () => {
     return false;
   });
   useEffect(() => {
-    console.log(games);
     console.log(uniqueGames);
     if (authenticated) {
       loadUser();
     }
-  }, [authenticated]);
+  }, [authenticated, loadUser, uniqueGames]);
 
   const handleSignOutClick = () => {
     dispatch(signout());

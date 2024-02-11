@@ -36,7 +36,7 @@ export default function Home() {
       dispatch(setCategories(results.payload.trivia_categories));
     };
     resultsCall();
-  }, []);
+  }, [dispatch, state]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
