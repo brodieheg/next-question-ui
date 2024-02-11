@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import styled from "styled-components";
 import useLoadUser from "../hooks/useLoadUser";
+import RejectedSignIn from "./RejectedSignin";
 import { signup, signin } from "../store/slices/slices/authSlice";
 
 const userSchema = Yup.object().shape({
@@ -16,9 +17,13 @@ const userSchema = Yup.object().shape({
 });
 
 const AuthForm = ({ type = "signin" }) => {
+  const [rejected, setRejected] = React.useState(false);
   const loadUser = useLoadUser();
-  const state = useSelector((state: RootState) => state.user);
   const router = useRouter();
+
+  React.useEffect(() => {
+    setRejected(false);
+  }, []);
 
   const {
     register,
@@ -32,15 +37,20 @@ const AuthForm = ({ type = "signin" }) => {
 
   const handleFormSubmit = async (data: {}) => {
     const action: Function = type === "signin" ? signin : signup;
-    await dispatch(action(data));
-
-    loadUser();
-    router.push("/");
+    const response = await dispatch(action(data));
+    console.log(response);
+    if (response.type === "auth/signin/rejected") {
+      setRejected(true);
+    } else {
+      loadUser();
+      router.push("/");
+    }
   };
 
   return (
     <SignUpStyles>
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <RejectedSignIn rejected={rejected} />
+      <form className="text-white" onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="form-group">
           <label>Email</label>
           <input
@@ -61,7 +71,7 @@ const AuthForm = ({ type = "signin" }) => {
           {errors.password?.message}
         </div>
 
-        <button className="btn btn-primary" type="submit">
+        <button className="mt-2 btn btn-primary" type="submit">
           Submit
         </button>
       </form>
