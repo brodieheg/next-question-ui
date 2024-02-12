@@ -20,7 +20,9 @@ const useLoadUser = () => {
     dispatch(setAllTimeScore(response.payload.response.allTimeScore));
     if (Array.isArray(response.payload.response.games)) {
       response.payload.response.games.forEach((game: any) => {
-        dispatch(addGame(game));
+        if (game.dateCreated) {
+          dispatch(addGame(game));
+        }
       });
     }
     dispatch(

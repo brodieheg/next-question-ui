@@ -30,8 +30,7 @@ export default function Home() {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
-    console.log(state);
-    const resultsCall = async () => {
+\    const resultsCall = async () => {
       const results = await dispatch(fetchCategories());
       dispatch(setCategories(results.payload.trivia_categories));
     };
@@ -46,7 +45,7 @@ export default function Home() {
       any
     >;
     dispatch(setResponseCode(questions.payload.response_code));
-    if (!questions.payload.response_code) {
+    if (questions.payload.response_code === 0) {
       dispatch(setQuestions(questions.payload.results));
       const date = new Date().toLocaleDateString("en-us", {
         weekday: "long",

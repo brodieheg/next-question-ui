@@ -45,25 +45,25 @@ const FinalScore = () => {
       type,
       score,
     };
-    if (!responseCode && questions.length === activeQuestion - 1) {
+    if (responseCode === 0 && questions.length === activeQuestion - 1) {
       // save game to database
       dispatch(newGame(gameToSave));
       // save game to redux until next database call
     }
   }, [
     dispatch,
-    category,
+    // category,
     dateCreated,
-    difficulty,
-    questions,
-    score,
-    type,
-    user,
+    // difficulty,
+    // questions,
+    // score,
+    // type,
+    // user,
     activeQuestion,
     questions.length,
     responseCode,
   ]);
-  if (!responseCode && questions.length === activeQuestion - 1) {
+  if (responseCode === 0 && questions.length === activeQuestion - 1) {
     return (
       <div className="final-score">
         <h2 className="mb-4 text-white text-center">Final Score: {score}</h2>

@@ -47,7 +47,6 @@ export default function HomeNav() {
         <div className="row">
           <button
             onClick={() => {
-              console.log("push");
               router.push("/mygames");
             }}
             className="mt-1 col-2 offset-5 text-center btn btn-light"

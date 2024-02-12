@@ -79,7 +79,7 @@ export const fetchQuestions = createAsyncThunk(
 );
 
 export const fetchCategories = createAsyncThunk(
-  "/questions",
+  "/categories",
   async (_, { getState }) => {
     try {
       const queryUrl = `https://opentdb.com/api_category.php`;

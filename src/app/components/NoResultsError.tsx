@@ -4,7 +4,7 @@ const NoResultsError = () => {
   const responseCode = useSelector(
     (state: RootState) => state.playGame.responseCode
   );
-  if (responseCode !== 0) {
+  if (responseCode! > 0) {
     return (
       <>
         <div className="col-md-4 text-center offset-4 p-2 bg-danger">

@@ -38,7 +38,6 @@ const AuthForm = ({ type = "signin" }) => {
   const handleFormSubmit = async (data: {}) => {
     const action: Function = type === "signin" ? signin : signup;
     const response = await dispatch(action(data));
-    console.log(response);
     if (response.type === "auth/signin/rejected") {
       setRejected(true);
     } else {

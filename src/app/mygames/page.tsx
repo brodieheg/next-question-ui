@@ -1,6 +1,6 @@
 "use client";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../store/configureStore";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,8 @@ import {
   setQuestions,
   setResponseCode,
 } from "../store/slices/slices/playGameSlice";
+
+import { setDate } from "../store/slices/slices/newGameSlice";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -17,6 +19,20 @@ export default function Home() {
   const state = useSelector((state: RootState) => state.user);
   const playGame = useSelector((state: RootState) => state.playGame);
   const games = state.games;
+
+  const responseCode = useSelector(
+    (state: RootState) => state.playGame.responseCode
+  );
+  const activeQuestion = useSelector(
+    (state: RootState) => state.playGame.activeQuestion
+  );
+  const questions = useSelector((state: RootState) => state.playGame.questions);
+
+  useEffect(() => {
+    dispatch(setQuestions([]));
+    dispatch(setResponseCode(null));
+    dispatch(setDate(null));
+  }, []);
 
   if (games.length > 0) {
     return (
@@ -40,7 +56,6 @@ export default function Home() {
                     dispatch(setQuestions(game.questions));
                     dispatch(setResponseCode(0));
                     router.push("/playgame");
-                    console.log(playGame);
                   }}
                 >
                   {game.dateCreated}
@@ -50,7 +65,25 @@ export default function Home() {
                   Your Score: {game.score}
                 </button>
               );
-            }
+            } else
+              return (
+                <button
+                  className="col-md-4 my-2 offset-4 game-button rounded bg-white text-black"
+                  key={uuidv4()}
+                  type="button"
+                  onClick={() => {
+                    dispatch(setQuestions(game.questions));
+                    dispatch(setResponseCode(null));
+                    router.push("/playgame");
+                  }}
+                >
+                  {game.dateCreated}
+                  <br></br>
+                  Questions {game.questions.length}
+                  <br></br>
+                  Your Score: {game.score}
+                </button>
+              );
           })}
         </div>
       </>

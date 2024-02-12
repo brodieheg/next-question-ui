@@ -25,7 +25,6 @@ export const Nav = () => {
     return false;
   });
   useEffect(() => {
-    console.log(uniqueGames);
     if (authenticated) {
       loadUser();
     }

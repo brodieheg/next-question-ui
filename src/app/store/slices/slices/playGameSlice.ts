@@ -12,7 +12,7 @@ interface playGameState {
   questions: questionState[];
   activeQuestion: number;
   score: number;
-  responseCode: number;
+  responseCode: number | null;
 }
 
 const initialState: playGameState = {
@@ -24,7 +24,7 @@ const initialState: playGameState = {
   ],
   activeQuestion: 0,
   score: 0,
-  responseCode: 0,
+  responseCode: null,
 };
 
 const playGameSlice = createSlice({
