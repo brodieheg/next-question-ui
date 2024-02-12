@@ -16,6 +16,15 @@ export default function HomeNav() {
   const auth = useSelector((state: RootState) => state.auth);
   const authenticated: string | null = auth.authenticated;
 
+  const totalPercentage = () => {
+    if (user.allTimeScore) {
+      return Math.floor(
+        (user.allTimeScore / user.totalQuestionsAttempted) * 100
+      );
+    }
+    return 0;
+  };
+
   useEffect(() => {
     loadUser();
   }, [loadUser]);
@@ -36,11 +45,7 @@ export default function HomeNav() {
         </div>
         <div className="row">
           <h5 className="text-white mt-1 col-md-4 offset-4 text-center">
-            Score Percentage:{" "}
-            {Math.floor(
-              (user.allTimeScore / user.totalQuestionsAttempted) * 100
-            )}
-            %
+            Score Percentage: {totalPercentage()}%
           </h5>
         </div>
 
