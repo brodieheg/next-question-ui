@@ -30,7 +30,7 @@ export default function Home() {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
-\    const resultsCall = async () => {
+    const resultsCall = async () => {
       const results = await dispatch(fetchCategories());
       dispatch(setCategories(results.payload.trivia_categories));
     };
