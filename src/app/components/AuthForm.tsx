@@ -64,6 +64,7 @@ const AuthForm = ({ type = "signin" }) => {
           <label>Password</label>
           <input
             className="form-control"
+            type="password"
             {...register("password", { required: true })}
             name="password"
           ></input>

@@ -67,6 +67,10 @@ const userSlice = createSlice({
     setTotalQuestionsAttempted: (state, action) => {
       state.totalQuestionsAttempted = action.payload;
     },
+    clearUser: (state) => {
+      console.log("hello");
+      state = initialState;
+    },
   },
 });
 
@@ -76,6 +80,7 @@ export const {
   addGame,
   setAllTimeScore,
   setTotalQuestionsAttempted,
+  clearUser,
 } = userSlice.actions;
 
 export default userSlice.reducer;
