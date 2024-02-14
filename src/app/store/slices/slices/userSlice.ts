@@ -68,8 +68,10 @@ const userSlice = createSlice({
       state.totalQuestionsAttempted = action.payload;
     },
     clearUser: (state) => {
-      console.log("hello");
-      state = initialState;
+      state.id = 0;
+      state.email = "";
+      state.games = [];
+      (state.allTimeScore = 0), (state.totalQuestionsAttempted = 0);
     },
   },
 });

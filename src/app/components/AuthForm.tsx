@@ -10,6 +10,7 @@ import styled from "styled-components";
 import useLoadUser from "../hooks/useLoadUser";
 import RejectedSignIn from "./RejectedSignin";
 import { signup, signin } from "../store/slices/slices/authSlice";
+import { clearUser } from "../store/slices/slices/userSlice";
 
 const userSchema = Yup.object().shape({
   email: Yup.string().email().required(),
@@ -43,6 +44,7 @@ const AuthForm = ({ type = "signin" }) => {
     } else {
       loadUser();
       router.push("/");
+      dispatch(clearUser());
     }
   };
 
