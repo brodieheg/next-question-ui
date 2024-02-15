@@ -39,10 +39,6 @@ export const Nav = () => {
     if (authenticated) {
       return (
         <>
-          <Link href="/mygames">
-            <li>My Games: {uniqueGames.length}</li>
-          </Link>
-          <li>{email}</li>
           <li>
             <LinkButton onClick={handleSignOutClick}>Sign Out</LinkButton>
           </li>
