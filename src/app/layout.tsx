@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <title>Next Question</title>
-        <meta property="og:title" content="My page title" key="title" />
+        <meta property="og:title" content="Next Question" key="title" />
       </head>
       <body className={inter.className}>
         <Provider store={store}>
